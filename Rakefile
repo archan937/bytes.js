@@ -52,6 +52,6 @@ task :release, :version do |task, args|
   File.open("#{release_dir}/test/index.html", "w").puts(javascript)
 
   # Compress release using YUI compressor
-  IO.popen "java -jar lib/yuicompressor-2.4.2.jar -v #{release_dir}/bytes.js -o #{release_dir}/templayed.min.js"
+  IO.popen "java -jar lib/yuicompressor-2.4.2.jar -v #{release_dir}/bytes.js -o #{release_dir}/bytes.min.js"
 
 end
