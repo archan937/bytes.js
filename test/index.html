@@ -8,13 +8,34 @@
     <link href="assets/qunit.css" rel="stylesheet"/>
   </head>
   <body>
+    <div style="width: 0; height: 0; overflow: hidden">
+      <section>
+        <ul id="links">
+          <li><a name="a" href="/a.html">Test A</a></li>
+          <li><a name="b" href="/b.html">Test B</a></li>
+        </ul>
+      </section>
+      <section>
+        <div class="wrapper">
+          <ul>
+            <li><a name="a" href="/a.html">Wrapper test A</a></li>
+            <li id="list_item"><a href="/b.html">Wrapper test B</a></li>
+            <li><a href="/c.html">Wrapper test C</a></li>
+          </ul>
+        </div>
+      </section>
+    </div>
     <div id="qunit"></div>
-    <script type="text/javascript" charset="utf-8">
+    <script type="text/javascript">
       test("indexOf", function() {
         equal(B.indexOf(1, [1, 2, 3, 4]), 0, "B.indexOf(1, [1, 2, 3, 4]) == 0");
         equal(B.indexOf(3, [1, 2, 3, 4]), 2, "B.indexOf(3, [1, 2, 3, 4]) == 2");
         equal(B.indexOf(4, [1, 2, 3, 4]), 3, "B.indexOf(4, [1, 2, 3, 4]) == 3");
         equal(B.indexOf(5, [1, 2, 3, 4]), -1, "B.indexOf(5, [1, 2, 3, 4]) == -1");
+      });
+      test("closest", function() {
+        var links = document.getElementById('links'), list_item = document.getElementById('list_item');
+        equal(B.closest('ul', links), links, "B.closest('ul', links) == links");
       });
     </script>
   </body>

@@ -23,7 +23,7 @@ find: function(sel, context) {
     return found;
   } else {
     var f = {'#': 'ById', '.': 'sByClassName', '@': 'sByName'}[sel[0]];
-    return Array.prototype.slice((context || document)['getElement' + (f || 'sByTagName')](f ? sel.slice(1) : sel));
+    return Array.prototype.slice.call((context || document)['getElement' + (f || 'sByTagName')](f ? sel.slice(1) : sel));
   }
 },
 
