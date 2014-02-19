@@ -11,7 +11,10 @@
     <div id="qunit"></div>
     <script type="text/javascript" charset="utf-8">
       test("indexOf", function() {
-        equal($.indexOf(1, [1, 2, 3, 4]), 0, "$.indexOf(1, [1, 2, 3, 4]) == 0");
+        equal(B.indexOf(1, [1, 2, 3, 4]), 0, "B.indexOf(1, [1, 2, 3, 4]) == 0");
+        equal(B.indexOf(3, [1, 2, 3, 4]), 2, "B.indexOf(3, [1, 2, 3, 4]) == 2");
+        equal(B.indexOf(4, [1, 2, 3, 4]), 3, "B.indexOf(4, [1, 2, 3, 4]) == 3");
+        equal(B.indexOf(5, [1, 2, 3, 4]), -1, "B.indexOf(5, [1, 2, 3, 4]) == -1");
       });
     </script>
   </body>

@@ -1,27 +1,29 @@
-$ = {
+B = function() { return typeof(arguments[0]) == 'function' ? B.ready(arguments[0]) : B.find.apply(null, arguments); };
 
-indexOf: function(value, array, i) {
-  for (i = array.length; i-- && array[i] != value;);
-  return i;
+(B.extend = function(target, object) {
+  for (var key in object) target[key] = object[key];
+})(B, {
+
+indexOf: function(val, array, i) {
+  for (i = array.length; i-- && array[i] != val;); return i;
 },
 
-closest: function(selector, child, elements) {
-  elements || (elements = $.find(selector));
-  if ($.indexOf(child, elements) != -1)
-    return child;
-  else if (child.parentNode)
-    return $.closest(selector, child.parentNode, elements);
+closest: function(sel, el, elements) {
+  elements || (elements = B.find(sel));
+  if (B.indexOf(el, elements) != -1)
+    return el;
+  else if (el.parentNode)
+    return B.closest(sel, el.parentNode, elements);
 },
 
-find: function(selector, context) {
-  if (selector.match(/\s/)) {
-    var array = selector.split(' '), parents = $.find(array.shift(), context), i, found = [];
-    for (i = parents.length; i--;)
-      found = found.concat($.find(array.join(' '), parents[-i]));
+find: function(sel, context) {
+  if (sel.match(/\s/)) {
+    var array = sel.split(' '), parents = B.find(array.shift(), context), i, found = [];
+    for (i = parents.length; i--;) found = found.concat(B.find(array.join(' '), parents[-i]));
     return found;
   } else {
-    var f = {'#': 'ById', '.': 'sByClassName', '@': 'sByName'}[selector[0]];
-    return Array.prototype.slice((context || document)['getElement' + (f || 'sByTagName')](f ? selector.slice(1) : selector));
+    var f = {'#': 'ById', '.': 'sByClassName', '@': 'sByName'}[sel[0]];
+    return Array.prototype.slice((context || document)['getElement' + (f || 'sByTagName')](f ? sel.slice(1) : sel));
   }
 },
 
@@ -34,10 +36,10 @@ bind: function(el, type, fn, remove) {
   }
 },
 
-on: function(selector, type, fn) {
-  $.bind(document, type, function(e) {
+on: function(sel, type, fn) {
+  B.bind(document, type, function(e) {
     var target = e.target || e.srcElement || window.event.target || window.event.srcElement;
-    if ($.indexOf(target, $.find(selector)) != -1) {
+    if (B.indexOf(target, B.find(sel)) != -1) {
       e.preventDefault();
       fn(e, target);
     }
@@ -45,7 +47,9 @@ on: function(selector, type, fn) {
 },
 
 ready: function(fn) {
-  '\v' == 'v' ? setTimeout(fn, 0) : $.bind(document, 'DOMContentLoaded', fn);
+  '\v' == 'v' ? setTimeout(fn, 0) : B.bind(document, 'DOMContentLoaded', fn);
 }
 
-};
+});
+
+$ || ($ = B);

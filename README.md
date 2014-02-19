@@ -1,12 +1,12 @@
 # bytes.js
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+A lightweight Javascript library for simple DOM traversing and event binding written in a few bytes
 
-## Contact me
+### Contact me
 
 For support, remarks and requests, please mail me at [pm_engel@icloud.com](mailto:pm_engel@icloud.com).
 
-## License
+### License
 
 Copyright (c) 2014 Paul Engel, released under the MIT license
 
