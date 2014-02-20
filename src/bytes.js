@@ -1,11 +1,19 @@
-B = function() { return typeof(arguments[0]) == 'function' ? B.ready(arguments[0]) : B.find.apply(null, arguments); };
+var B = window.B = function() { return typeof(arguments[0]) == 'function' ? B.ready(arguments[0]) : B.find.apply(null, arguments); };
 
 (B.extend = function(target, object) {
   for (var key in object) target[key] = object[key];
 })(B, {
 
 indexOf: function(val, array, i) {
-  for (i = array.length; i-- && array[i] != val;); return i;
+  for (i = 0; i < array.length; i++) { if (val === array[i]) return i; }
+  return -1;
+},
+
+getElementsByClassName: function(name, context) {
+  var found = context.getElementsByTagName('*'), i, array = [];
+  for (i = 0; i < found.length; i++)
+    if ((' ' + found[i].className + ' ').indexOf(' ' + name + ' ') != -1) array.push(found[i]);
+  return array;
 },
 
 closest: function(sel, el, elements) {
@@ -18,17 +26,23 @@ closest: function(sel, el, elements) {
 
 find: function(sel, context) {
   context || (context = document);
+  var found = [], i, array = [], parents, f = {'#': 'ById', '.': 'sByClassName', '@': 'sByName'}[sel.charAt(0)], s = (f ? sel.slice(1) : sel), fn = 'getElement' + (f || 'sByTagName');
   if (sel.match(/(\[|\(|\=|\:)/) || sel.match(/[^\s](\#|\@|\.)/)) {
     if (context.querySelectorAll) return context.querySelectorAll(sel);
   }
   if (sel.match(/\s/)) {
-    var array = sel.split(' '), parents = B.find(array.shift(), context), i, found = [];
-    for (i = parents.length; i--;) found = found.concat(B.find(array.join(' '), parents[-i]));
-    return found;
+    array = sel.split(' '), parents = B.find(array.shift(), context);
+    for (i = 0; i < parents.length; i++) found = found.concat(B.find(array.join(' '), parents[i]));
   } else {
-    var f = {'#': 'ById', '.': 'sByClassName', '@': 'sByName'}[sel[0]], found = context['getElement' + (f || 'sByTagName')](f ? sel.slice(1) : sel);
-    return f == 'ById' ? [found] : Array.prototype.slice.call(found);
+    found = context[fn] ? context[fn](s) : B[fn](s, context);
+    if (f == 'ById')
+      found = [found];
+    else {
+      for (i = 0; i < found.length; i++) array.push(found[i]);
+      found = array;
+    }
   }
+  return found;
 },
 
 bind: function(el, type, fn, remove) {
@@ -44,7 +58,8 @@ on: function(sel, type, fn) {
   B.bind(document, type, function(e) {
     var target = e.target || e.srcElement || window.event.target || window.event.srcElement;
     if (B.indexOf(target, B.find(sel)) != -1) {
-      e.preventDefault(); fn(e, target);
+      e.preventDefault ? e.preventDefault() : e.returnValue = false;
+      fn(e, target);
     }
   });
 },
@@ -55,4 +70,4 @@ ready: function(fn) {
 
 });
 
-typeof($) == "undefined" ? $ = B : null;
+typeof(window.$) == "undefined" ? window.$ = B : null;
