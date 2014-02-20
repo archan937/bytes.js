@@ -15,7 +15,7 @@
           <li><a name="b" href="/b.html">Test B</a></li>
         </ul>
       </section>
-      <section id="section2">
+      <section id="section2" class="foo">
         <div id="wrapper" class="wrapper">
           <ul>
             <li><a name="a" href="/a.html">Wrapper test A</a></li>
@@ -55,16 +55,27 @@
       });
 
       test("find", function() {
+        // Simple selectors
         assert_equal("1", "B.find('#page').length");
         assert_equal("2", "B.find('section').length");
         assert_equal("2", "B.find('html body section').length");
         assert_equal("2", "B.find('#page section').length");
         assert_equal("0", "B.find('#page foo').length");
+        assert_equal("2", "B.find('@a').length");
+        assert_equal("1", "B.find('@b').length");
         assert_equal("links", "B.find('ul', section1)[0]");
         assert_equal("undefined", "B.find('.wrapper', section1)[0]");
         assert_equal("wrapper", "B.find('.wrapper', section2)[0]");
+
+        // Convenience methods
         assert_equal("wrapper", "B('.wrapper', section2)[0]");
         assert_equal("wrapper", "$('.wrapper', section2)[0]");
+
+        // Using element.querySelectorAll()
+        assert_equal("section2", "B.find('section.foo')[0]")
+        assert_equal("section1", "B.find('section:not(.foo)')[0]")
+        assert_equal("section1", "B.find('#page section:not(.foo)')[0]")
+        assert_equal("undefined", "B.find('#qunit section:not(.foo)')[0]")
       });
 
     </script>

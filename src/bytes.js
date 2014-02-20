@@ -17,13 +17,16 @@ closest: function(sel, el, elements) {
 },
 
 find: function(sel, context) {
+  context || (context = document);
+  if (sel.match(/(\[|\(|\=|\:)/) || sel.match(/[^\s](\#|\@|\.)/)) {
+    if (context.querySelectorAll) return context.querySelectorAll(sel);
+  }
   if (sel.match(/\s/)) {
     var array = sel.split(' '), parents = B.find(array.shift(), context), i, found = [];
     for (i = parents.length; i--;) found = found.concat(B.find(array.join(' '), parents[-i]));
     return found;
   } else {
-    var f = {'#': 'ById', '.': 'sByClassName', '@': 'sByName'}[sel[0]],
-    found = (context || document)['getElement' + (f || 'sByTagName')](f ? sel.slice(1) : sel);
+    var f = {'#': 'ById', '.': 'sByClassName', '@': 'sByName'}[sel[0]], found = context['getElement' + (f || 'sByTagName')](f ? sel.slice(1) : sel);
     return f == 'ById' ? [found] : Array.prototype.slice.call(found);
   }
 },
@@ -41,8 +44,7 @@ on: function(sel, type, fn) {
   B.bind(document, type, function(e) {
     var target = e.target || e.srcElement || window.event.target || window.event.srcElement;
     if (B.indexOf(target, B.find(sel)) != -1) {
-      e.preventDefault();
-      fn(e, target);
+      e.preventDefault(); fn(e, target);
     }
   });
 },
