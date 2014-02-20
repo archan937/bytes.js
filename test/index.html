@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>archan937@github: /bytes.js - test suite</title>
+    <script src="../bytes.js" type="text/javascript"></script>
+    <script src="assets/qunit.js" type="text/javascript"></script>
+    <link href="assets/qunit.css" rel="stylesheet"/>
+  </head>
+  <body>
+    <div id="page" style="width: 0; height: 0; overflow: hidden">
+      <center id="center1">
+        <ul id="links">
+          <li><a name="a" href="/a.html">Test A</a></li>
+          <li><a name="b" href="/b.html">Test B</a></li>
+        </ul>
+      </center>
+      <center id="center2" class="foo">
+        <div id="wrapper" class="wrapper">
+          <ul>
+            <li><a name="a" href="/a.html">Wrapper test A</a></li>
+            <li id="list_item"><a href="/b.html">Wrapper test B</a></li>
+            <li><a href="/c.html">Wrapper test C</a></li>
+          </ul>
+        </div>
+      </center>
+    </div>
+    <div id="qunit"></div>
+    <script type="text/javascript">
+
+      var center1 = document.getElementById('center1'),
+          center2 = document.getElementById('center2'),
+          wrapper = document.getElementById('wrapper'),
+          links = document.getElementById('links'),
+          list_item = document.getElementById('list_item');
+
+      function assert_equal(exp, act, msg) {
+        equal(eval(act), eval(exp), msg || (act + ' == ' + exp))
+      };
+
+      test('indexOf', function() {
+        assert_equal( "0", "B.indexOf(1, [1, 2, 3, 4])");
+        assert_equal( "2", "B.indexOf(3, [1, 2, 3, 4])");
+        assert_equal( "3", "B.indexOf(4, [1, 2, 3, 4])");
+        assert_equal("-1", "B.indexOf(5, [1, 2, 3, 4])");
+        assert_equal( "0", "B.indexOf(wrapper, [wrapper, links, wrapper])");
+        assert_equal( "1", "B.indexOf(links, [wrapper, links, wrapper])");
+        assert_equal("-1", "B.indexOf(center1, [wrapper, links, wrapper])");
+      });
+
+      test('closest', function() {
+        assert_equal("links", "B.closest('ul', links)");
+        assert_equal("center1", "B.closest('center', links)");
+        assert_equal("center2", "B.closest('center', list_item)");
+        assert_equal("wrapper", "B.closest('.wrapper', list_item)");
+        assert_equal("undefined", "B.closest('.wrapper', links)");
+        assert_equal("undefined", "B.closest('foo', links)");
+      });
+
+      test('find', function() {
+        // Simple selectors
+        assert_equal("1", "B.find('#page').length");
+        assert_equal("2", "B.find('center').length");
+        assert_equal("1", "B.find('.wrapper').length");
+        assert_equal("2", "B.find('html body center').length");
+        assert_equal("2", "B.find('#page center').length");
+        assert_equal("0", "B.find('#page foo').length");
+        assert_equal("2", "B.find('@a').length");
+        assert_equal("1", "B.find('@b').length");
+        assert_equal("links", "B.find('ul', center1)[0]");
+        assert_equal("undefined", "B.find('.wrapper', center1)[0]");
+        assert_equal("wrapper", "B.find('.wrapper', center2)[0]");
+
+        // Convenience methods
+        assert_equal("wrapper", "B('.wrapper', center2)[0]");
+        assert_equal("wrapper", "$('.wrapper', center2)[0]");
+
+        if (document.querySelectorAll) {
+          assert_equal("center2", "B.find('center.foo')[0]")
+          assert_equal("center1", "B.find('center:not(.foo)')[0]")
+          assert_equal("center1", "B.find('#page center:not(.foo)')[0]")
+          assert_equal("undefined", "B.find('#qunit center:not(.foo)')[0]")
+        }
+      });
+
+    </script>
+  </body>
+</html>
