@@ -1,6 +1,6 @@
-# bytes.js
+# B(ytes.js)
 
-A lightweight Javascript library for simple DOM traversing and event binding written in a few bytes
+A lightweight Javascript library for DOM traversing and event binding written in a fair amount of bytes.
 
 ### Contact me
 
