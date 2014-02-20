@@ -55,7 +55,7 @@
       });
 
       test("find", function() {
-        assert_equal("1", "B('#page').length");
+        assert_equal("1", "B.find('#page').length");
         assert_equal("2", "B.find('section').length");
         assert_equal("2", "B.find('html body section').length");
         assert_equal("2", "B.find('#page section').length");
@@ -63,6 +63,8 @@
         assert_equal("links", "B.find('ul', section1)[0]");
         assert_equal("undefined", "B.find('.wrapper', section1)[0]");
         assert_equal("wrapper", "B.find('.wrapper', section2)[0]");
+        assert_equal("wrapper", "B('.wrapper', section2)[0]");
+        assert_equal("wrapper", "$('.wrapper', section2)[0]");
       });
 
     </script>

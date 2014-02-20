@@ -52,6 +52,12 @@ task :release, :version do |task, args|
   File.open("#{release_dir}/test/index.html", "w").puts(javascript)
 
   # Compress release using YUI compressor
-  IO.popen "java -jar lib/yuicompressor-2.4.2.jar -v #{release_dir}/bytes.js -o #{release_dir}/bytes.min.js"
+  `java -jar lib/yuicompressor-2.4.2.jar -v #{release_dir}/bytes.js -o #{release_dir}/bytes.min.js`
 
+end
+
+desc "Minify and gzip src/bytes.js"
+task :compress do |task, args|
+  `java -jar lib/yuicompressor-2.4.2.jar -v src/bytes.js -o src/bytes.min.js`
+  `gzip -9cf src/bytes.min.js > src/bytes.min.js.gz`
 end
